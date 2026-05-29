@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anniversary</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --v:#7c5cbf;--vl:#a98be0;--vp:#ede6f8;
+  --pk:#e8a0c0;--pkl:#f5cfe0;
+  --cr:#fff8fc;--td:#3d2255;--tm:#7c5a8e;
+}
+body{font-family:'Cormorant Garamond',serif;background:var(--cr);min-height:100vh;overflow:hidden}
+
+/* ── FLOATING LAYER ── */
+#float-layer{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+
+.floater{
+  position:absolute;
+  opacity:0;
+  will-change:transform,opacity;
+}
+
+/* petal type */
+.f-petal{
+  border-radius:50% 50% 50% 0/60% 60% 40% 40%;
+  animation:floatPetal linear infinite;
+}
+/* sparkle type */
+.f-spark{
+  animation:floatSpark ease-in-out infinite;
+  font-style:normal;
+  line-height:1;
+}
+/* rose type */
+.f-rose{
+  animation:floatRose ease-in-out infinite;
+}
+/* heart type */
+.f-heart{
+  animation:floatHeart ease-in-out infinite;
+  line-height:1;
+  font-style:normal;
+}
+/* butterfly / small bloom */
+.f-bloom{
+  animation:floatBloom ease-in-out infinite;
+}
+
+@keyframes floatPetal{
+  0%  {transform:translateY(-40px) translateX(0)    rotate(0deg);   opacity:0}
+  6%  {opacity:.75}
+  45% {transform:translateY(42vh)  translateX(18px) rotate(160deg)}
+  92% {opacity:.45}
+  100%{transform:translateY(108vh) translateX(-12px) rotate(340deg);opacity:0}
+}
+@keyframes floatSpark{
+  0%,100%{opacity:0;  transform:translateY(0)    scale(.5) rotate(0deg)}
+  25%    {opacity:.95;transform:translateY(-12px) scale(1.15) rotate(25deg)}
+  50%    {opacity:.7; transform:translateY(-6px)  scale(.9) rotate(-10deg)}
+  75%    {opacity:.9; transform:translateY(-14px) scale(1.05) rotate(15deg)}
+}
+@keyframes floatRose{
+  0%  {transform:translateY(0)    rotate(-8deg)  scale(1);   opacity:0}
+  8%  {opacity:.85}
+  50% {transform:translateY(-22px) rotate(8deg)  scale(1.05)}
+  92% {opacity:.6}
+  100%{transform:translateY(0)    rotate(-8deg)  scale(1);   opacity:0}
+}
+@keyframes floatHeart{
+  0%  {transform:translateY(0)    scale(1)    rotate(-6deg);opacity:0}
+  10% {opacity:.8}
+  40% {transform:translateY(-18px) scale(1.1) rotate(6deg)}
+  70% {transform:translateY(-8px)  scale(.95) rotate(-3deg)}
+  90% {opacity:.55}
+  100%{transform:translateY(0)    scale(1)    rotate(-6deg);opacity:0}
+}
+@keyframes floatBloom{
+  0%  {transform:translateY(-30px) translateX(0)   rotate(0deg);  opacity:0}
+  7%  {opacity:.9}
+  50% {transform:translateY(48vh)  translateX(24px) rotate(180deg)}
+  93% {opacity:.5}
+  100%{transform:translateY(106vh) translateX(-20px) rotate(360deg);opacity:0}
+}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;transition:opacity .85s ease,transform .85s ease}
+.screen.hidden{opacity:0;pointer-events:none;transform:scale(.96)}
+
+/* ── LANDING ── */
+#landing{background:radial-gradient(ellipse at 50% 35%,#f5e8ff 0%,#fde8f4 55%,#fff2fb 100%);text-align:center}
+.for-name{font-size:13px;letter-spacing:.38em;text-transform:uppercase;color:var(--pk);margin-bottom:8px;opacity:0;animation:fadeUp .9s ease .3s forwards}
+.to-name{font-family:'Playfair Display',serif;font-size:clamp(18px,4vw,26px);color:var(--vl);margin-bottom:20px;opacity:0;animation:fadeUp .9s ease .5s forwards;font-style:italic}
+.landing-title{font-family:'Playfair Display',serif;font-size:clamp(50px,9vw,88px);font-weight:400;color:var(--td);line-height:1.1;opacity:0;animation:fadeUp 1s ease .7s forwards}
+.landing-title em{font-style:italic;color:var(--v)}
+.landing-sub{font-size:19px;font-weight:300;color:var(--tm);margin-top:14px;letter-spacing:.04em;opacity:0;animation:fadeUp 1s ease 1s forwards}
+.divider{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--pk),transparent);margin:26px auto;opacity:0;animation:fadeIn 1s ease 1.2s forwards}
+.landing-btn{font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:.2em;text-transform:uppercase;color:var(--cr);background:var(--v);border:none;padding:16px 44px;border-radius:40px;cursor:pointer;transition:transform .2s,box-shadow .2s;opacity:0;animation:fadeUp 1s ease 1.4s forwards}
+.landing-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(124,92,191,.33)}
+.landing-btn:active{transform:scale(.97)}
+.orb{position:absolute;border-radius:50%;pointer-events:none;animation:drift ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(14px,18px) scale(1.06)}}
+
+/* ── CODE ── */
+#code-screen{background:radial-gradient(ellipse at 50% 60%,#f0e8ff 0%,#fce8f5 60%,#fff4fb 100%);text-align:center}
+.code-title{font-family:'Playfair Display',serif;font-size:clamp(26px,4.5vw,44px);font-weight:400;color:var(--td);margin-bottom:8px}
+.code-hint{font-size:17px;color:var(--tm);font-weight:300;margin-bottom:36px;letter-spacing:.02em}
+.code-dots{display:flex;gap:16px;justify-content:center;margin-bottom:6px}
+.dot-box{width:62px;height:70px;border-radius:14px;background:white;border:1.5px solid var(--pkl);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:32px;color:var(--v);transition:border-color .2s,transform .15s,box-shadow .2s;position:relative;overflow:hidden}
+.dot-box::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.55) 0%,transparent 60%);pointer-events:none}
+.dot-box.active{border-color:var(--vl);transform:scale(1.07);box-shadow:0 4px 20px rgba(124,92,191,.18)}
+.numpad{display:grid;grid-template-columns:repeat(3,70px);grid-template-rows:repeat(4,62px);gap:11px;margin-top:28px;justify-content:center}
+.num-btn{width:70px;height:62px;border-radius:14px;border:1.5px solid var(--pkl);background:white;font-family:'Playfair Display',serif;font-size:23px;color:var(--td);cursor:pointer;transition:background .15s,transform .1s,border-color .15s;display:flex;align-items:center;justify-content:center}
+.num-btn:hover{background:var(--vp);border-color:var(--vl)}
+.num-btn:active{transform:scale(.91);background:var(--vp)}
+.num-btn.del{font-size:17px;color:var(--tm)}
+.code-error{font-size:13.5px;color:#c0587a;letter-spacing:.04em;height:18px;margin-top:8px;transition:opacity .3s;opacity:0}
+.code-error.show{opacity:1}
+.shake{animation:shake .42s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+/* ── MESSAGE ── */
+#message-screen{background:radial-gradient(ellipse at 40% 50%,#efe5ff 0%,#fce8f4 55%,#fff4fb 100%);padding:32px 20px 40px;text-align:center;overflow-y:auto;justify-content:flex-start;padding-top:44px}
+.msg-eyebrow{font-size:12px;letter-spacing:.35em;text-transform:uppercase;color:var(--pk);margin-bottom:10px;opacity:0;transition:opacity .8s ease .3s}
+.msg-title{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,52px);font-weight:400;color:var(--td);line-height:1.15;opacity:0;transition:opacity .8s ease .55s}
+.msg-title em{font-style:italic;color:var(--v)}
+
+/* bouquet center */
+.bouquet-frame-wrap{display:flex;justify-content:center;margin:20px auto 0;opacity:0;transition:opacity .8s ease .8s;position:relative;width:220px;height:220px}
+.bouquet-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.bouquet-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:112px;height:112px;border-radius:50%;background:radial-gradient(circle at 40% 38%,#fff8fc,#fde8f4);z-index:3;box-shadow:0 4px 24px rgba(232,160,192,.32);border:3px solid var(--pkl);overflow:hidden;cursor:pointer;transition:transform .2s,border-color .2s}
+.bouquet-center:hover{transform:translate(-50%,-50%) scale(1.04);border-color:var(--vl)}
+#user-photo{width:100%;height:100%;object-fit:cover;display:none}
+.bouquet-center-hint{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--tm);font-size:11.5px;line-height:1.6;transition:opacity .3s;pointer-events:none}
+.bouquet-center-hint .plus{font-size:24px;color:var(--pk);display:block;animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.2);opacity:1}}
+
+/* card */
+.msg-card{background:rgba(255,255,255,.78);backdrop-filter:blur(8px);border:1px solid rgba(232,160,192,.35);border-radius:22px;padding:30px 34px;max-width:540px;margin:18px auto 0;opacity:0;transform:translateY(18px);transition:opacity .9s ease 1s,transform .9s ease 1s;position:relative}
+.msg-card::before{content:'\201C';font-family:'Playfair Display',serif;font-size:90px;color:var(--pkl);position:absolute;top:-14px;left:18px;line-height:1;pointer-events:none}
+.msg-text{font-size:clamp(15px,2.3vw,19px);font-weight:300;color:var(--tm);line-height:1.85;font-style:italic;white-space:pre-line}
+.msg-sign{margin-top:18px;font-family:'Playfair Display',serif;font-size:16px;color:var(--v)}
+
+/* countdown */
+.countdown-wrap{max-width:540px;margin:20px auto 0;opacity:0;transition:opacity .8s ease 1.4s}
+.countdown-label{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--pk);margin-bottom:12px}
+.countdown-units{display:flex;gap:10px;justify-content:center}
+.cd-unit{flex:1;max-width:90px;background:rgba(255,255,255,.7);border:1px solid rgba(232,160,192,.3);border-radius:14px;padding:12px 8px 10px;text-align:center}
+.cd-num{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,32px);color:var(--td);line-height:1;display:block}
+.cd-lbl{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--tm);margin-top:4px;display:block}
+.anniversary-today{font-family:'Playfair Display',serif;font-size:22px;color:var(--v);font-style:italic;display:none}
+
+/* hearts row */
+.msg-hearts{display:flex;justify-content:center;gap:10px;margin-top:20px;opacity:0;transition:opacity .8s ease 1.8s}
+.msg-heart{width:13px;height:13px;background:var(--pk);border-radius:50%;transform:scale(0)}
+.msg-hearts.visible .msg-heart{animation:popHeart .5s cubic-bezier(.34,1.56,.64,1) forwards}
+.msg-hearts.visible .msg-heart:nth-child(1){animation-delay:1.9s}
+.msg-hearts.visible .msg-heart:nth-child(2){animation-delay:2.1s}
+.msg-hearts.visible .msg-heart:nth-child(3){animation-delay:2.3s;background:var(--vl)}
+.msg-hearts.visible .msg-heart:nth-child(4){animation-delay:2.5s}
+.msg-hearts.visible .msg-heart:nth-child(5){animation-delay:2.7s}
+@keyframes popHeart{from{transform:scale(0)}to{transform:scale(1)}}
+
+.reveal{opacity:1!important;transform:translateY(0)!important}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* confetti */
+.confetti-piece{position:fixed;pointer-events:none;z-index:9999;animation:confettiFall ease-in forwards}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+#message-screen::-webkit-scrollbar{width:4px}
+#message-screen::-webkit-scrollbar-track{background:transparent}
+#message-screen::-webkit-scrollbar-thumb{background:var(--pkl);border-radius:4px}
+@keyframes sway{0%,100%{transform-origin:center bottom;transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.sway1{animation:sway 3.5s ease-in-out infinite}
+.sway2{animation:sway 4.2s ease-in-out infinite .8s}
+.sway3{animation:sway 3s ease-in-out infinite .4s}
+</style>
+</head>
+<body>
+
+<!-- FLOATING LAYER -->
+<div id="float-layer"></div>
+
+<!-- SIDE BOUQUETS - always visible, float on left & right -->
+<div id="side-left" style="position:fixed;left:-18px;top:50%;transform:translateY(-50%);z-index:5;pointer-events:none;display:flex;flex-direction:column;gap:18px;align-items:flex-start">
+  <!-- big left bouquet -->
+  <svg width="140" height="340" viewBox="0 0 140 340" xmlns="http://www.w3.org/2000/svg" style="animation:sideFloat1 5s ease-in-out infinite alternate;filter:drop-shadow(2px 4px 8px rgba(124,92,191,.12))">
+    <defs><radialGradient id="sl1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f5c8d8"/><stop offset="100%" stop-color="#e8a0c0"/></radialGradient><radialGradient id="sl2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#d4b0ee"/><stop offset="100%" stop-color="#a98be0"/></radialGradient></defs>
+    <!-- stems -->
+    <path d="M70,330 C65,290 55,240 60,180" stroke="#8db882" stroke-width="2.5" fill="none" opacity=".7"/>
+    <path d="M70,330 C75,280 90,230 85,170" stroke="#8db882" stroke-width="2" fill="none" opacity=".6"/>
+    <path d="M70,330 C60,300 40,260 45,200" stroke="#a8c89a" stroke-width="2" fill="none" opacity=".65"/>
+    <path d="M70,330 C80,295 100,250 95,195" stroke="#a8c89a" stroke-width="2" fill="none" opacity=".6"/>
+    <path d="M70,330 C55,310 30,275 35,230" stroke="#8db882" stroke-width="1.5" fill="none" opacity=".55"/>
+    <!-- leaves -->
+    <ellipse cx="52" cy="260" rx="18" ry="8" fill="#a8c89a" opacity=".8" transform="rotate(-40 52 260)"/>
+    <ellipse cx="88" cy="245" rx="16" ry="7" fill="#b8d8a8" opacity=".75" transform="rotate(30 88 245)"/>
+    <ellipse cx="40" cy="220" rx="15" ry="6" fill="#a8c89a" opacity=".7" transform="rotate(-55 40 220)"/>
+    <ellipse cx="96" cy="210" rx="14" ry="6" fill="#8db882" opacity=".7" transform="rotate(45 96 210)"/>
+    <ellipse cx="35" cy="175" rx="13" ry="5.5" fill="#b8d8a8" opacity=".65" transform="rotate(-35 35 175)"/>
+    <!-- roses -->
+    <g transform="translate(58,175)"><ellipse cx="0" cy="0" rx="16" ry="14" fill="url(#sl1)" opacity=".95"/><ellipse cx="-5" cy="-4" rx="12" ry="9" fill="#f0b0c8" opacity=".9"/><ellipse cx="4" cy="-7" rx="9" ry="7" fill="#f8c8d8" opacity=".88"/><ellipse cx="-1" cy="-10" rx="6" ry="5" fill="#fad8e5" opacity=".85"/><ellipse cx="2" cy="-13" rx="4" ry="3" fill="#fde8ef" opacity=".8"/></g>
+    <g transform="translate(92,168)"><ellipse cx="0" cy="0" rx="14" ry="12" fill="url(#sl2)" opacity=".95"/><ellipse cx="4" cy="-3" rx="10" ry="8" fill="#b898e8" opacity=".9"/><ellipse cx="-3" cy="-6" rx="7" ry="6" fill="#c8b0f0" opacity=".88"/><ellipse cx="1" cy="-9" rx="5" ry="4" fill="#dcc8f8" opacity=".85"/></g>
+    <g transform="translate(38,195)"><ellipse cx="0" cy="0" rx="13" ry="11" fill="url(#sl1)" opacity=".9"/><ellipse cx="-4" cy="-3" rx="9" ry="7" fill="#f0b8cc" opacity=".88"/><ellipse cx="3" cy="-6" rx="6" ry="5" fill="#fad0df" opacity=".85"/><ellipse cx="0" cy="-8" rx="4" ry="3" fill="#fde8ef"/></g>
+    <g transform="translate(100,200)"><ellipse cx="0" cy="0" rx="12" ry="10" fill="url(#sl2)" opacity=".9"/><ellipse cx="3" cy="-3" rx="8" ry="6.5" fill="#bda0e8" opacity=".88"/><ellipse cx="-2" cy="-6" rx="6" ry="4.5" fill="#d4b8f5" opacity=".85"/></g>
+    <g transform="translate(32,148)"><ellipse cx="0" cy="0" rx="12" ry="10" fill="url(#sl1)" opacity=".88"/><ellipse cx="-3" cy="-3" rx="8" ry="6.5" fill="#f0b8cc"/><ellipse cx="2" cy="-6" rx="6" ry="4.5" fill="#fad0df"/></g>
+    <!-- small flowers -->
+    <g transform="translate(72,140)"><circle cx="0" cy="-5" r="4.5" fill="#fff0f5" opacity=".9"/><circle cx="5.4" cy="1.8" r="4.5" fill="#fff0f5" opacity=".9"/><circle cx="3.3" cy="8.5" r="4.5" fill="#fff0f5" opacity=".9"/><circle cx="-3.3" cy="8.5" r="4.5" fill="#fff0f5" opacity=".9"/><circle cx="-5.4" cy="1.8" r="4.5" fill="#fff0f5" opacity=".9"/><circle cx="0" cy="3" r="4" fill="#f5dd50" opacity=".75"/></g>
+    <g transform="translate(108,225)"><circle cx="0" cy="-4" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="4.2" cy="1.4" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="2.6" cy="6.5" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="-2.6" cy="6.5" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="-4.2" cy="1.4" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="0" cy="2.8" r="3" fill="#f5dd50" opacity=".7"/></g>
+    <!-- baby's breath -->
+    <circle cx="50" cy="155" r="2.5" fill="white" opacity=".85"/><circle cx="62" cy="150" r="2" fill="#fde8f2" opacity=".8"/><circle cx="44" cy="162" r="2" fill="white" opacity=".8"/><circle cx="76" cy="158" r="2.5" fill="white" opacity=".8"/><circle cx="88" cy="153" r="2" fill="#fde8f2" opacity=".75"/><circle cx="102" cy="160" r="2" fill="white" opacity=".8"/>
+  </svg>
+
+  <!-- small accent spray mid-left -->
+  <svg width="90" height="160" viewBox="0 0 90 160" xmlns="http://www.w3.org/2000/svg" style="margin-left:10px;animation:sideFloat2 6s ease-in-out infinite alternate;filter:drop-shadow(1px 3px 6px rgba(232,160,192,.15))">
+    <path d="M45,155 C40,130 35,100 42,65" stroke="#8db882" stroke-width="2" fill="none" opacity=".65"/>
+    <path d="M45,155 C50,125 60,95 55,60" stroke="#a8c89a" stroke-width="1.5" fill="none" opacity=".6"/>
+    <ellipse cx="38" cy="115" rx="14" ry="6" fill="#b8d8a8" opacity=".75" transform="rotate(-45 38 115)"/>
+    <ellipse cx="56" cy="105" rx="12" ry="5" fill="#a8c89a" opacity=".7" transform="rotate(35 56 105)"/>
+    <g transform="translate(42,68)"><ellipse cx="0" cy="0" rx="13" ry="11" fill="#e8a0c0" opacity=".93"/><ellipse cx="-4" cy="-3" rx="9" ry="7" fill="#f0b8cc"/><ellipse cx="3" cy="-6" rx="6" ry="5" fill="#fad0df"/><ellipse cx="0" cy="-8" rx="4" ry="3" fill="#fde8ef"/></g>
+    <g transform="translate(62,78)"><ellipse cx="0" cy="0" rx="11" ry="9" fill="#a98be0" opacity=".9"/><ellipse cx="3" cy="-3" rx="7" ry="5.5" fill="#bda0e8"/><ellipse cx="-2" cy="-5" rx="5" ry="4" fill="#d4b8f5"/></g>
+    <circle cx="30" cy="88" r="2" fill="white" opacity=".8"/><circle cx="42" cy="84" r="2.5" fill="#fde8f2" opacity=".8"/><circle cx="55" cy="87" r="2" fill="white" opacity=".8"/>
+    <g transform="translate(25,60)"><circle cx="0" cy="-4" r="3.5" fill="#f5cfe0" opacity=".9"/><circle cx="4.2" cy="1.4" r="3.5" fill="#f5cfe0" opacity=".9"/><circle cx="2.6" cy="6.5" r="3.5" fill="#f5cfe0" opacity=".9"/><circle cx="-2.6" cy="6.5" r="3.5" fill="#f5cfe0" opacity=".9"/><circle cx="-4.2" cy="1.4" r="3.5" fill="#f5cfe0" opacity=".9"/><circle cx="0" cy="2.5" r="3" fill="#f0d040" opacity=".65"/></g>
+  </svg>
+</div>
+
+<div id="side-right" style="position:fixed;right:-18px;top:50%;transform:translateY(-50%);z-index:5;pointer-events:none;display:flex;flex-direction:column;gap:18px;align-items:flex-end">
+  <!-- big right bouquet (mirror) -->
+  <svg width="140" height="340" viewBox="0 0 140 340" xmlns="http://www.w3.org/2000/svg" style="transform:scaleX(-1);animation:sideFloat2 5.5s ease-in-out infinite alternate;filter:drop-shadow(-2px 4px 8px rgba(124,92,191,.12))">
+    <defs><radialGradient id="sr1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#d4b0ee"/><stop offset="100%" stop-color="#a98be0"/></radialGradient><radialGradient id="sr2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f5c8d8"/><stop offset="100%" stop-color="#e8a0c0"/></radialGradient></defs>
+    <path d="M70,330 C65,290 55,240 60,180" stroke="#8db882" stroke-width="2.5" fill="none" opacity=".7"/>
+    <path d="M70,330 C75,280 90,230 85,170" stroke="#8db882" stroke-width="2" fill="none" opacity=".6"/>
+    <path d="M70,330 C60,300 40,260 45,200" stroke="#a8c89a" stroke-width="2" fill="none" opacity=".65"/>
+    <path d="M70,330 C80,295 100,250 95,195" stroke="#a8c89a" stroke-width="2" fill="none" opacity=".6"/>
+    <path d="M70,330 C55,310 30,275 35,230" stroke="#8db882" stroke-width="1.5" fill="none" opacity=".55"/>
+    <ellipse cx="52" cy="260" rx="18" ry="8" fill="#a8c89a" opacity=".8" transform="rotate(-40 52 260)"/>
+    <ellipse cx="88" cy="245" rx="16" ry="7" fill="#b8d8a8" opacity=".75" transform="rotate(30 88 245)"/>
+    <ellipse cx="40" cy="220" rx="15" ry="6" fill="#a8c89a" opacity=".7" transform="rotate(-55 40 220)"/>
+    <ellipse cx="96" cy="210" rx="14" ry="6" fill="#8db882" opacity=".7" transform="rotate(45 96 210)"/>
+    <ellipse cx="35" cy="175" rx="13" ry="5.5" fill="#b8d8a8" opacity=".65" transform="rotate(-35 35 175)"/>
+    <g transform="translate(58,175)"><ellipse cx="0" cy="0" rx="16" ry="14" fill="url(#sr1)" opacity=".95"/><ellipse cx="-5" cy="-4" rx="12" ry="9" fill="#b898e8" opacity=".9"/><ellipse cx="4" cy="-7" rx="9" ry="7" fill="#c8b0f0" opacity=".88"/><ellipse cx="-1" cy="-10" rx="6" ry="5" fill="#dcc8f8" opacity=".85"/><ellipse cx="2" cy="-13" rx="4" ry="3" fill="#eedcff" opacity=".8"/></g>
+    <g transform="translate(92,168)"><ellipse cx="0" cy="0" rx="14" ry="12" fill="url(#sr2)" opacity=".95"/><ellipse cx="4" cy="-3" rx="10" ry="8" fill="#f0b0c8" opacity=".9"/><ellipse cx="-3" cy="-6" rx="7" ry="6" fill="#f8c8d8" opacity=".88"/><ellipse cx="1" cy="-9" rx="5" ry="4" fill="#fde8ef" opacity=".85"/></g>
+    <g transform="translate(38,195)"><ellipse cx="0" cy="0" rx="13" ry="11" fill="url(#sr1)" opacity=".9"/><ellipse cx="-4" cy="-3" rx="9" ry="7" fill="#bda0e8" opacity=".88"/><ellipse cx="3" cy="-6" rx="6" ry="5" fill="#d4b8f5" opacity=".85"/><ellipse cx="0" cy="-8" rx="4" ry="3" fill="#eedcff"/></g>
+    <g transform="translate(100,200)"><ellipse cx="0" cy="0" rx="12" ry="10" fill="url(#sr2)" opacity=".9"/><ellipse cx="3" cy="-3" rx="8" ry="6.5" fill="#f5c0d2" opacity=".88"/><ellipse cx="-2" cy="-6" rx="6" ry="4.5" fill="#fad8e5" opacity=".85"/></g>
+    <g transform="translate(32,148)"><ellipse cx="0" cy="0" rx="12" ry="10" fill="url(#sr1)" opacity=".88"/><ellipse cx="-3" cy="-3" rx="8" ry="6.5" fill="#bda0e8"/><ellipse cx="2" cy="-6" rx="6" ry="4.5" fill="#d4b8f5"/></g>
+    <g transform="translate(72,140)"><circle cx="0" cy="-5" r="4.5" fill="#e0d0f5" opacity=".9"/><circle cx="5.4" cy="1.8" r="4.5" fill="#e0d0f5" opacity=".9"/><circle cx="3.3" cy="8.5" r="4.5" fill="#e0d0f5" opacity=".9"/><circle cx="-3.3" cy="8.5" r="4.5" fill="#e0d0f5" opacity=".9"/><circle cx="-5.4" cy="1.8" r="4.5" fill="#e0d0f5" opacity=".9"/><circle cx="0" cy="3" r="4" fill="#f5dd50" opacity=".75"/></g>
+    <g transform="translate(108,225)"><circle cx="0" cy="-4" r="3.5" fill="#fff0f5" opacity=".9"/><circle cx="4.2" cy="1.4" r="3.5" fill="#fff0f5" opacity=".9"/><circle cx="2.6" cy="6.5" r="3.5" fill="#fff0f5" opacity=".9"/><circle cx="-2.6" cy="6.5" r="3.5" fill="#fff0f5" opacity=".9"/><circle cx="-4.2" cy="1.4" r="3.5" fill="#fff0f5" opacity=".9"/><circle cx="0" cy="2.8" r="3" fill="#f5dd50" opacity=".7"/></g>
+    <circle cx="50" cy="155" r="2.5" fill="white" opacity=".85"/><circle cx="62" cy="150" r="2" fill="#fde8f2" opacity=".8"/><circle cx="44" cy="162" r="2" fill="white" opacity=".8"/><circle cx="76" cy="158" r="2.5" fill="white" opacity=".8"/><circle cx="88" cy="153" r="2" fill="#fde8f2" opacity=".75"/><circle cx="102" cy="160" r="2" fill="white" opacity=".8"/>
+  </svg>
+
+  <!-- small accent spray mid-right -->
+  <svg width="90" height="160" viewBox="0 0 90 160" xmlns="http://www.w3.org/2000/svg" style="margin-right:10px;transform:scaleX(-1);animation:sideFloat1 6.5s ease-in-out infinite alternate;filter:drop-shadow(-1px 3px 6px rgba(232,160,192,.15))">
+    <path d="M45,155 C40,130 35,100 42,65" stroke="#8db882" stroke-width="2" fill="none" opacity=".65"/>
+    <path d="M45,155 C50,125 60,95 55,60" stroke="#a8c89a" stroke-width="1.5" fill="none" opacity=".6"/>
+    <ellipse cx="38" cy="115" rx="14" ry="6" fill="#b8d8a8" opacity=".75" transform="rotate(-45 38 115)"/>
+    <ellipse cx="56" cy="105" rx="12" ry="5" fill="#a8c89a" opacity=".7" transform="rotate(35 56 105)"/>
+    <g transform="translate(42,68)"><ellipse cx="0" cy="0" rx="13" ry="11" fill="#b898e8" opacity=".93"/><ellipse cx="-4" cy="-3" rx="9" ry="7" fill="#c8b0f0"/><ellipse cx="3" cy="-6" rx="6" ry="5" fill="#dcc8f8"/><ellipse cx="0" cy="-8" rx="4" ry="3" fill="#eedcff"/></g>
+    <g transform="translate(62,78)"><ellipse cx="0" cy="0" rx="11" ry="9" fill="#e8a0c0" opacity=".9"/><ellipse cx="3" cy="-3" rx="7" ry="5.5" fill="#f0b8cc"/><ellipse cx="-2" cy="-5" rx="5" ry="4" fill="#fad0df"/></g>
+    <circle cx="30" cy="88" r="2" fill="white" opacity=".8"/><circle cx="42" cy="84" r="2.5" fill="#fde8f2" opacity=".8"/><circle cx="55" cy="87" r="2" fill="white" opacity=".8"/>
+    <g transform="translate(25,60)"><circle cx="0" cy="-4" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="4.2" cy="1.4" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="2.6" cy="6.5" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="-2.6" cy="6.5" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="-4.2" cy="1.4" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="0" cy="2.5" r="3" fill="#f0d040" opacity=".65"/></g>
+  </svg>
+</div>
+<div class="screen" id="landing">
+  <div class="orb" style="width:300px;height:300px;background:rgba(232,160,192,.12);top:-60px;right:-80px;animation-duration:7s"></div>
+  <div class="orb" style="width:240px;height:240px;background:rgba(169,139,224,.1);bottom:-50px;left:-70px;animation-duration:9s;animation-delay:-3s"></div>
+
+  <!-- corner bouquets -->
+  <svg style="position:absolute;top:-10px;left:-10px;width:160px;height:160px;pointer-events:none;opacity:.75" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="55" cy="120" rx="22" ry="10" fill="#a8c89a" opacity=".8" transform="rotate(-50 55 120)"/>
+    <ellipse cx="38" cy="130" rx="18" ry="8" fill="#8db882" opacity=".7" transform="rotate(-70 38 130)"/>
+    <ellipse cx="78" cy="108" rx="16" ry="8" fill="#b0d0a8" opacity=".75" transform="rotate(-30 78 108)"/>
+    <g transform="translate(60,105)"><ellipse cx="0" cy="0" rx="14" ry="12" fill="#f0b0c8" opacity=".95"/><ellipse cx="-4" cy="-3" rx="10" ry="8" fill="#f5c0d2"/><ellipse cx="3" cy="-6" rx="7" ry="5" fill="#fad8e5"/><ellipse cx="0" cy="-9" rx="4" ry="3" fill="#fde8ef"/></g>
+    <g transform="translate(95,90)"><ellipse cx="0" cy="0" rx="13" ry="11" fill="#b898e8" opacity=".95"/><ellipse cx="3" cy="-3" rx="9" ry="7" fill="#c8b0f0"/><ellipse cx="-2" cy="-6" rx="6" ry="5" fill="#dcc8f8"/><ellipse cx="1" cy="-8" rx="4" ry="3" fill="#eedcff"/></g>
+    <g transform="translate(35,100)"><ellipse cx="0" cy="0" rx="11" ry="9" fill="#e8a0c0" opacity=".9"/><ellipse cx="-3" cy="-3" rx="8" ry="6" fill="#f0b8cc"/><ellipse cx="2" cy="-5" rx="6" ry="4.5" fill="#fad0df"/></g>
+    <circle cx="48" cy="83" r="3" fill="white" opacity=".8"/><circle cx="58" cy="78" r="2.5" fill="#fde8f2" opacity=".8"/><circle cx="72" cy="82" r="2" fill="white" opacity=".8"/><circle cx="40" cy="92" r="2" fill="white" opacity=".7"/>
+    <g transform="translate(75,72)"><circle cx="0" cy="-5" r="4" fill="#fff0f5" opacity=".9"/><circle cx="4.8" cy="1.5" r="4" fill="#fff0f5" opacity=".9"/><circle cx="3" cy="7" r="4" fill="#fff0f5" opacity=".9"/><circle cx="-3" cy="7" r="4" fill="#fff0f5" opacity=".9"/><circle cx="-4.8" cy="1.5" r="4" fill="#fff0f5" opacity=".9"/><circle cx="0" cy="2.5" r="3.5" fill="#f5e040" opacity=".7"/></g>
+  </svg>
+  <svg style="position:absolute;top:-10px;right:-10px;width:160px;height:160px;pointer-events:none;opacity:.75;transform:scaleX(-1)" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="55" cy="120" rx="22" ry="10" fill="#a8c89a" opacity=".8" transform="rotate(-50 55 120)"/>
+    <ellipse cx="38" cy="130" rx="18" ry="8" fill="#8db882" opacity=".7" transform="rotate(-70 38 130)"/>
+    <ellipse cx="78" cy="108" rx="16" ry="8" fill="#b0d0a8" opacity=".75" transform="rotate(-30 78 108)"/>
+    <g transform="translate(60,105)"><ellipse cx="0" cy="0" rx="14" ry="12" fill="#b898e8" opacity=".95"/><ellipse cx="-4" cy="-3" rx="10" ry="8" fill="#c8b0f0"/><ellipse cx="3" cy="-6" rx="7" ry="5" fill="#dcc8f8"/><ellipse cx="0" cy="-9" rx="4" ry="3" fill="#eedcff"/></g>
+    <g transform="translate(95,90)"><ellipse cx="0" cy="0" rx="13" ry="11" fill="#f0b0c8" opacity=".95"/><ellipse cx="3" cy="-3" rx="9" ry="7" fill="#f5c8d8"/><ellipse cx="-2" cy="-6" rx="6" ry="5" fill="#fad8e5"/><ellipse cx="1" cy="-8" rx="4" ry="3" fill="#fde8ef"/></g>
+    <g transform="translate(35,100)"><ellipse cx="0" cy="0" rx="11" ry="9" fill="#a98be0" opacity=".9"/><ellipse cx="-3" cy="-3" rx="8" ry="6" fill="#bda0e8"/><ellipse cx="2" cy="-5" rx="6" ry="4.5" fill="#d4b8f5"/></g>
+    <circle cx="48" cy="83" r="3" fill="white" opacity=".8"/><circle cx="58" cy="78" r="2.5" fill="#fde8f2" opacity=".8"/><circle cx="72" cy="82" r="2" fill="white" opacity=".8"/>
+    <g transform="translate(75,72)"><circle cx="0" cy="-5" r="4" fill="#e0d0f5" opacity=".9"/><circle cx="4.8" cy="1.5" r="4" fill="#e0d0f5" opacity=".9"/><circle cx="3" cy="7" r="4" fill="#e0d0f5" opacity=".9"/><circle cx="-3" cy="7" r="4" fill="#e0d0f5" opacity=".9"/><circle cx="-4.8" cy="1.5" r="4" fill="#e0d0f5" opacity=".9"/><circle cx="0" cy="2.5" r="3.5" fill="#f5e040" opacity=".7"/></g>
+  </svg>
+  <svg style="position:absolute;bottom:-10px;left:-10px;width:140px;height:140px;pointer-events:none;opacity:.65;transform:scaleY(-1)" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="55" cy="120" rx="22" ry="10" fill="#a8c89a" opacity=".8" transform="rotate(-50 55 120)"/>
+    <ellipse cx="38" cy="130" rx="18" ry="8" fill="#8db882" opacity=".7" transform="rotate(-70 38 130)"/>
+    <g transform="translate(60,105)"><ellipse cx="0" cy="0" rx="13" ry="11" fill="#f5c8d8" opacity=".9"/><ellipse cx="-3" cy="-3" rx="9" ry="7" fill="#fad8e5"/><ellipse cx="2" cy="-6" rx="6" ry="4.5" fill="#fde8ef"/></g>
+    <g transform="translate(90,95)"><ellipse cx="0" cy="0" rx="11" ry="9" fill="#c8b0f0" opacity=".9"/><ellipse cx="3" cy="-3" rx="8" ry="6" fill="#dcc8f8"/></g>
+    <circle cx="50" cy="88" r="2.5" fill="white" opacity=".8"/><circle cx="65" cy="84" r="2" fill="#fde8f2" opacity=".8"/>
+  </svg>
+  <svg style="position:absolute;bottom:-10px;right:-10px;width:140px;height:140px;pointer-events:none;opacity:.65;transform:scale(-1,-1)" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="55" cy="120" rx="22" ry="10" fill="#a8c89a" opacity=".8" transform="rotate(-50 55 120)"/>
+    <ellipse cx="38" cy="130" rx="18" ry="8" fill="#8db882" opacity=".7" transform="rotate(-70 38 130)"/>
+    <g transform="translate(60,105)"><ellipse cx="0" cy="0" rx="13" ry="11" fill="#b898e8" opacity=".9"/><ellipse cx="-3" cy="-3" rx="9" ry="7" fill="#c8b0f0"/><ellipse cx="2" cy="-6" rx="6" ry="4.5" fill="#dcc8f8"/></g>
+    <g transform="translate(90,95)"><ellipse cx="0" cy="0" rx="11" ry="9" fill="#f0b0c8" opacity=".9"/><ellipse cx="3" cy="-3" rx="8" ry="6" fill="#f8c8d8"/></g>
+    <circle cx="50" cy="88" r="2.5" fill="white" opacity=".8"/><circle cx="65" cy="84" r="2" fill="#fde8f2" opacity=".8"/>
+  </svg>
+  <p class="for-name">&#10022; A gift for</p>
+  <p class="to-name" id="landing-to-name">—</p>
+  <h1 class="landing-title">Happy<br><em>Anniversary</em></h1>
+  <p class="landing-sub">Something beautiful was made just for you.</p>
+  <div class="divider"></div>
+  <button class="landing-btn" onclick="goToCode()">Open your gift &#8594;</button>
+</div>
+
+<!-- CODE SCREEN -->
+<div class="screen hidden" id="code-screen">
+  <svg style="position:absolute;top:-8px;left:-8px;width:130px;height:130px;pointer-events:none;opacity:.6" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="55" cy="120" rx="20" ry="9" fill="#a8c89a" opacity=".8" transform="rotate(-50 55 120)"/>
+    <g transform="translate(62,108)"><ellipse cx="0" cy="0" rx="13" ry="11" fill="#f0b0c8" opacity=".9"/><ellipse cx="-3" cy="-4" rx="9" ry="7" fill="#f8c8d8"/><ellipse cx="2" cy="-6" rx="6" ry="4.5" fill="#fde8ef"/></g>
+    <g transform="translate(92,92)"><ellipse cx="0" cy="0" rx="11" ry="9" fill="#b898e8" opacity=".9"/><ellipse cx="3" cy="-3" rx="7" ry="5.5" fill="#c8b0f0"/></g>
+    <circle cx="50" cy="90" r="2.5" fill="white" opacity=".8"/><circle cx="68" cy="85" r="2" fill="white" opacity=".8"/>
+  </svg>
+  <svg style="position:absolute;top:-8px;right:-8px;width:130px;height:130px;pointer-events:none;opacity:.6;transform:scaleX(-1)" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="55" cy="120" rx="20" ry="9" fill="#a8c89a" opacity=".8" transform="rotate(-50 55 120)"/>
+    <g transform="translate(62,108)"><ellipse cx="0" cy="0" rx="13" ry="11" fill="#b898e8" opacity=".9"/><ellipse cx="-3" cy="-4" rx="9" ry="7" fill="#c8b0f0"/><ellipse cx="2" cy="-6" rx="6" ry="4.5" fill="#dcc8f8"/></g>
+    <g transform="translate(92,92)"><ellipse cx="0" cy="0" rx="11" ry="9" fill="#f0b0c8" opacity=".9"/><ellipse cx="3" cy="-3" rx="7" ry="5.5" fill="#f8c8d8"/></g>
+    <circle cx="50" cy="90" r="2.5" fill="white" opacity=".8"/><circle cx="68" cy="85" r="2" fill="white" opacity=".8"/>
+  </svg>
+  <h2 class="code-title">Enter the secret code</h2>
+  <p class="code-hint">Only you know this &#10022;</p>
+  <div class="code-dots" id="code-dots">
+    <div class="dot-box" id="d0"></div>
+    <div class="dot-box" id="d1"></div>
+    <div class="dot-box" id="d2"></div>
+    <div class="dot-box" id="d3"></div>
+  </div>
+  <p class="code-error" id="code-error">Hmm, that&#8217;s not quite right &#8212; try again &#127800;</p>
+  <div class="numpad">
+    <button class="num-btn" onclick="addDigit('1')">1</button>
+    <button class="num-btn" onclick="addDigit('2')">2</button>
+    <button class="num-btn" onclick="addDigit('3')">3</button>
+    <button class="num-btn" onclick="addDigit('4')">4</button>
+    <button class="num-btn" onclick="addDigit('5')">5</button>
+    <button class="num-btn" onclick="addDigit('6')">6</button>
+    <button class="num-btn" onclick="addDigit('7')">7</button>
+    <button class="num-btn" onclick="addDigit('8')">8</button>
+    <button class="num-btn" onclick="addDigit('9')">9</button>
+    <button class="num-btn del" onclick="clearCode()">&#10005;</button>
+    <button class="num-btn" onclick="addDigit('0')">0</button>
+    <button class="num-btn del" onclick="deleteDigit()">&#9003;</button>
+  </div>
+</div>
+
+<!-- MESSAGE SCREEN -->
+<div class="screen hidden" id="message-screen">
+  <p class="msg-eyebrow" id="msg-eyebrow">You made it &#10022;</p>
+  <h1 class="msg-title" id="msg-title">To <em id="msg-to-name">you</em>,<br>with all my love</h1>
+  <div class="bouquet-frame-wrap" id="photo-wrap">
+    <svg class="bouquet-svg" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="rg1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f5c8d8"/><stop offset="100%" stop-color="#e8a0c0"/></radialGradient>
+        <radialGradient id="rg2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#d4b0ee"/><stop offset="100%" stop-color="#a98be0"/></radialGradient>
+        <radialGradient id="rg3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f0c0d5"/><stop offset="100%" stop-color="#de8ab0"/></radialGradient>
+      </defs>
+      <ellipse cx="62" cy="168" rx="18" ry="9" fill="#a8c89a" opacity=".85" transform="rotate(-40 62 168)"/>
+      <ellipse cx="52" cy="175" rx="15" ry="7" fill="#8db882" opacity=".75" transform="rotate(-60 52 175)"/>
+      <ellipse cx="158" cy="168" rx="18" ry="9" fill="#a8c89a" opacity=".85" transform="rotate(40 158 168)"/>
+      <ellipse cx="168" cy="175" rx="15" ry="7" fill="#8db882" opacity=".75" transform="rotate(60 168 175)"/>
+      <ellipse cx="65" cy="58" rx="14" ry="7" fill="#a8c89a" opacity=".8" transform="rotate(-55 65 58)"/>
+      <ellipse cx="155" cy="58" rx="14" ry="7" fill="#a8c89a" opacity=".8" transform="rotate(55 155 58)"/>
+      <ellipse cx="28" cy="110" rx="16" ry="7" fill="#b0d0a8" opacity=".75" transform="rotate(-10 28 110)"/>
+      <ellipse cx="192" cy="110" rx="16" ry="7" fill="#b0d0a8" opacity=".75" transform="rotate(10 192 110)"/>
+      <g transform="translate(110,18)" class="sway2"><circle cx="0" cy="-5" r="4" fill="#fff0f5" opacity=".9"/><circle cx="4.8" cy="1.5" r="4" fill="#fff0f5" opacity=".9"/><circle cx="3" cy="7.5" r="4" fill="#fff0f5" opacity=".9"/><circle cx="-3" cy="7.5" r="4" fill="#fff0f5" opacity=".9"/><circle cx="-4.8" cy="1.5" r="4" fill="#fff0f5" opacity=".9"/><circle cx="0" cy="3" r="3.5" fill="#f5e000" opacity=".7"/></g>
+      <g transform="translate(22,80)" class="sway3"><circle cx="0" cy="-4.5" r="3.5" fill="#f5cfe0" opacity=".9"/><circle cx="4.3" cy="1.4" r="3.5" fill="#f5cfe0" opacity=".9"/><circle cx="2.6" cy="6.8" r="3.5" fill="#f5cfe0" opacity=".9"/><circle cx="-2.6" cy="6.8" r="3.5" fill="#f5cfe0" opacity=".9"/><circle cx="-4.3" cy="1.4" r="3.5" fill="#f5cfe0" opacity=".9"/><circle cx="0" cy="3" r="3" fill="#f0c060" opacity=".65"/></g>
+      <g transform="translate(198,80)" class="sway1"><circle cx="0" cy="-4.5" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="4.3" cy="1.4" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="2.6" cy="6.8" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="-2.6" cy="6.8" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="-4.3" cy="1.4" r="3.5" fill="#e0d0f5" opacity=".9"/><circle cx="0" cy="3" r="3" fill="#f0c060" opacity=".65"/></g>
+      <g transform="translate(110,202)" class="sway1"><circle cx="0" cy="-4" r="3.5" fill="#fde8f2" opacity=".9"/><circle cx="3.8" cy="1.2" r="3.5" fill="#fde8f2" opacity=".9"/><circle cx="2.4" cy="6.2" r="3.5" fill="#fde8f2" opacity=".9"/><circle cx="-2.4" cy="6.2" r="3.5" fill="#fde8f2" opacity=".9"/><circle cx="-3.8" cy="1.2" r="3.5" fill="#fde8f2" opacity=".9"/><circle cx="0" cy="2.5" r="3" fill="#f5dd60" opacity=".65"/></g>
+      <g transform="translate(60,170)" class="sway3"><ellipse cx="0" cy="0" rx="12" ry="10" fill="url(#rg3)" opacity=".95"/><ellipse cx="-4" cy="-3" rx="9" ry="7" fill="#eda8c0" opacity=".9"/><ellipse cx="3" cy="-5" rx="7" ry="5.5" fill="#f5c0d2" opacity=".88"/><ellipse cx="-1" cy="-7" rx="5" ry="4" fill="#fad0e0" opacity=".85"/><ellipse cx="2" cy="-9" rx="3.5" ry="3" fill="#fde0ea" opacity=".8"/></g>
+      <g transform="translate(160,170)" class="sway1"><ellipse cx="0" cy="0" rx="12" ry="10" fill="url(#rg2)" opacity=".95"/><ellipse cx="4" cy="-3" rx="9" ry="7" fill="#b898e8" opacity=".9"/><ellipse cx="-3" cy="-5" rx="7" ry="5.5" fill="#c8a8ee" opacity=".88"/><ellipse cx="1" cy="-7" rx="5" ry="4" fill="#dcc0f5" opacity=".85"/><ellipse cx="-2" cy="-9" rx="3.5" ry="3" fill="#eed4ff" opacity=".8"/></g>
+      <g transform="translate(55,52)" class="sway2"><ellipse cx="0" cy="0" rx="11" ry="9" fill="url(#rg1)" opacity=".95"/><ellipse cx="-3" cy="-3" rx="8" ry="6.5" fill="#f0b0c8" opacity=".9"/><ellipse cx="2.5" cy="-5" rx="6.5" ry="5" fill="#f8c8d8" opacity=".88"/><ellipse cx="-1" cy="-7" rx="4.5" ry="3.5" fill="#fad8e5" opacity=".85"/><ellipse cx="1.5" cy="-8.5" rx="3" ry="2.5" fill="#fde8ef" opacity=".8"/></g>
+      <g transform="translate(165,52)" class="sway3"><ellipse cx="0" cy="0" rx="11" ry="9" fill="url(#rg2)" opacity=".95"/><ellipse cx="3" cy="-3" rx="8" ry="6.5" fill="#b898e8" opacity=".9"/><ellipse cx="-2" cy="-5" rx="6.5" ry="5" fill="#c8b0f0" opacity=".88"/><ellipse cx="1" cy="-7" rx="4.5" ry="3.5" fill="#dcc8f8" opacity=".85"/><ellipse cx="-1" cy="-8.5" rx="3" ry="2.5" fill="#eedcff" opacity=".8"/></g>
+      <g transform="translate(20,115)" class="sway1"><ellipse cx="0" cy="0" rx="13" ry="11" fill="url(#rg1)" opacity=".95"/><ellipse cx="-4" cy="-4" rx="10" ry="8" fill="#f0b0c8" opacity=".9"/><ellipse cx="3" cy="-6" rx="7.5" ry="6" fill="#f8c8d8" opacity=".88"/><ellipse cx="-1" cy="-8" rx="5.5" ry="4.5" fill="#fad8e5" opacity=".85"/><ellipse cx="2" cy="-10" rx="4" ry="3" fill="#fde8ef" opacity=".8"/></g>
+      <g transform="translate(200,115)" class="sway2"><ellipse cx="0" cy="0" rx="13" ry="11" fill="url(#rg2)" opacity=".95"/><ellipse cx="4" cy="-4" rx="10" ry="8" fill="#b898e8" opacity=".9"/><ellipse cx="-3" cy="-6" rx="7.5" ry="6" fill="#c8b0f0" opacity=".88"/><ellipse cx="1" cy="-8" rx="5.5" ry="4.5" fill="#dcc8f8" opacity=".85"/><ellipse cx="-2" cy="-10" rx="4" ry="3" fill="#eedcff" opacity=".8"/></g>
+      <g opacity=".7">
+        <circle cx="38" cy="145" r="2.5" fill="white"/><circle cx="46" cy="137" r="2" fill="white"/><circle cx="30" cy="135" r="2" fill="#fde8f2"/><circle cx="42" cy="150" r="2" fill="white"/><circle cx="35" cy="155" r="2.5" fill="white"/>
+        <circle cx="182" cy="145" r="2.5" fill="white"/><circle cx="174" cy="137" r="2" fill="white"/><circle cx="190" cy="135" r="2" fill="#fde8f2"/><circle cx="178" cy="150" r="2" fill="white"/><circle cx="185" cy="155" r="2.5" fill="white"/>
+        <circle cx="90" cy="14" r="2" fill="white"/><circle cx="100" cy="10" r="2.5" fill="#fde8f2"/><circle cx="120" cy="10" r="2.5" fill="white"/><circle cx="130" cy="14" r="2" fill="#fde8f2"/>
+        <circle cx="80" cy="190" r="2" fill="white"/><circle cx="95" cy="196" r="2.5" fill="#fde8f2"/><circle cx="125" cy="196" r="2.5" fill="white"/><circle cx="140" cy="190" r="2" fill="#fde8f2"/>
+      </g>
+      <path d="M85,210 Q110,200 135,210" stroke="#e8a0c0" stroke-width="1.5" fill="none" opacity=".6"/>
+      <path d="M90,213 Q110,204 130,213" stroke="#a98be0" stroke-width="1" fill="none" opacity=".5"/>
+    </svg>
+    <!-- =====================================================
+         TO ADD YOUR PHOTO: change the src below to your
+         image file, e.g.  src="yourphoto.jpg"
+         The photo will automatically fill the circle.
+         ===================================================== -->
+    <div class="bouquet-center" onclick="document.getElementById('photo-input').click()">
+      <img id="user-photo" src="" alt="your photo">
+      <div class="bouquet-center-hint" id="photo-hint">
+        <span class="plus">&#9825;</span>
+        <span>Add photo</span>
+      </div>
+    </div>
+  </div>
+  <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="loadPhoto(this)">
+  <div class="msg-card" id="msg-card">
+    <p class="msg-text" id="msg-text"></p>
+    <p class="msg-sign" id="msg-sign"></p>
+  </div>
+  <div class="countdown-wrap" id="countdown-wrap">
+    <p class="countdown-label" id="cd-label">Next anniversary in</p>
+    <div class="countdown-units" id="cd-units">
+      <div class="cd-unit"><span class="cd-num" id="cd-d">00</span><span class="cd-lbl">days</span></div>
+      <div class="cd-unit"><span class="cd-num" id="cd-h">00</span><span class="cd-lbl">hours</span></div>
+      <div class="cd-unit"><span class="cd-num" id="cd-m">00</span><span class="cd-lbl">mins</span></div>
+      <div class="cd-unit"><span class="cd-num" id="cd-s">00</span><span class="cd-lbl">secs</span></div>
+    </div>
+    <p class="anniversary-today" id="anniversary-today">&#127881; Happy Anniversary! &#127881;</p>
+  </div>
+  <div class="msg-hearts" id="msg-hearts">
+    <div class="msg-heart"></div>
+    <div class="msg-heart"></div>
+    <div class="msg-heart" style="background:var(--vl)"></div>
+    <div class="msg-heart"></div>
+    <div class="msg-heart"></div>
+  </div>
+</div>
+
+<script>
+/* ===============================================
+   CUSTOMIZE YOUR ANNIVERSARY PAGE
+   =============================================== */
+const CONFIG = {
+  to:      "My Love",
+  from:    "Forever Yours",
+  date:    "2026-01-01",
+  code:    "1234",
+  message: "Every moment with you feels like the beginning of something beautiful.\nThank you for your laughter, your kindness, and the quiet ways you make every ordinary day feel like something worth remembering.\nHere\u2019s to another year \u2014 and all the years after that."
+};
+/* =============================================== */
+
+/* apply config */
+document.getElementById('landing-to-name').textContent = CONFIG.to;
+document.getElementById('msg-to-name').textContent     = CONFIG.to;
+document.getElementById('msg-text').textContent        = CONFIG.message;
+document.getElementById('msg-sign').textContent        = '\u2014 ' + CONFIG.from + ' \u2665';
+
+/* ═══════════════════════════
+   FLOATING IMAGES GENERATOR
+   ═══════════════════════════ */
+const layer = document.getElementById('float-layer');
+
+/* SVG templates for inline floating images */
+function makePetalSVG(color){
+  return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 28'><ellipse cx='10' cy='14' rx='8' ry='12' fill='${color}' opacity='.85'/><ellipse cx='10' cy='10' rx='5' ry='8' fill='white' opacity='.2'/></svg>`;
+}
+function makeRoseSVG(c1,c2){
+  return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><ellipse cx='18' cy='20' rx='14' ry='12' fill='${c1}'/><ellipse cx='14' cy='16' rx='10' ry='8' fill='${c1}'/><ellipse cx='20' cy='13' rx='8' ry='6' fill='${c2}'/><ellipse cx='16' cy='10' rx='6' ry='5' fill='${c2}' opacity='.9'/><ellipse cx='19' cy='8' rx='4' ry='3.5' fill='white' opacity='.3'/><ellipse cx='18' cy='7' rx='3' ry='2.5' fill='white' opacity='.2'/></svg>`;
+}
+function makeHeartSVG(color){
+  return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 28'><path d='M16 26 C16 26 2 18 2 9 C2 4.5 5.5 2 9 2 C12 2 14.5 3.5 16 6 C17.5 3.5 20 2 23 2 C26.5 2 30 4.5 30 9 C30 18 16 26 16 26Z' fill='${color}' opacity='.85'/></svg>`;
+}
+function makeFlowerSVG(petalColor, centerColor){
+  const p = [];
+  for(let i=0;i<5;i++){
+    const a = (i/5)*Math.PI*2 - Math.PI/2;
+    const cx = 16 + Math.cos(a)*8;
+    const cy = 16 + Math.sin(a)*8;
+    p.push(`<ellipse cx='${cx.toFixed(1)}' cy='${cy.toFixed(1)}' rx='5' ry='3.5' fill='${petalColor}' transform='rotate(${(i/5*360).toFixed(0)} ${cx.toFixed(1)} ${cy.toFixed(1)})' opacity='.9'/>`);
+  }
+  return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'>${p.join('')}<circle cx='16' cy='16' r='5' fill='${centerColor}'/></svg>`;
+}
+function makeLeafSVG(color){
+  return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 32'><path d='M12 2 C18 8 20 18 12 30 C4 18 6 8 12 2Z' fill='${color}' opacity='.8'/><line x1='12' y1='4' x2='12' y2='28' stroke='white' stroke-width='1' opacity='.4'/></svg>`;
+}
+function makeStarSVG(color){
+  return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2 L13.5 9 L20 9 L14.5 13.5 L16.5 21 L12 17 L7.5 21 L9.5 13.5 L4 9 L10.5 9 Z' fill='${color}' opacity='.9'/></svg>`;
+}
+function makeButterflyHalf(color){
+  return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 32'><ellipse cx='20' cy='16' rx='16' ry='12' fill='${color}' opacity='.75'/><ellipse cx='20' cy='22' rx='10' ry='7' fill='${color}' opacity='.5'/><ellipse cx='20' cy='14' rx='8' ry='6' fill='white' opacity='.2'/></svg>`;
+}
+
+/* float item spec: {type, svgFn, args, size, count, anim, dur} */
+const items = [
+  // falling petals — many, medium size
+  {make:()=>makePetalSVG('#f5cfe0'), size:[14,20], count:10, type:'f-petal', dur:[7,13]},
+  {make:()=>makePetalSVG('#d4a8e8'), size:[12,18], count:8,  type:'f-petal', dur:[8,14]},
+  {make:()=>makePetalSVG('#e8a0c0'), size:[10,16], count:7,  type:'f-petal', dur:[6,12]},
+  {make:()=>makePetalSVG('#c9aaee'), size:[14,22], count:6,  type:'f-petal', dur:[9,15]},
+  // floating roses — slow drift
+  {make:()=>makeRoseSVG('#f0b0c8','#f8d0e0'), size:[28,38], count:5, type:'f-rose', dur:[5,8]},
+  {make:()=>makeRoseSVG('#b898e8','#d4b8f5'), size:[28,38], count:5, type:'f-rose', dur:[4,7]},
+  {make:()=>makeRoseSVG('#de8ab0','#f0b0c8'), size:[22,32], count:4, type:'f-rose', dur:[6,9]},
+  // hearts
+  {make:()=>makeHeartSVG('#e8a0c0'), size:[18,26], count:6, type:'f-heart', dur:[4,7]},
+  {make:()=>makeHeartSVG('#a98be0'), size:[14,22], count:5, type:'f-heart', dur:[5,8]},
+  {make:()=>makeHeartSVG('#f5cfe0'), size:[10,16], count:4, type:'f-heart', dur:[3,6]},
+  // 5-petal flowers
+  {make:()=>makeFlowerSVG('#f5cfe0','#f5dd60'), size:[20,30], count:5, type:'f-bloom', dur:[8,14]},
+  {make:()=>makeFlowerSVG('#e0d0f5','#f0c060'), size:[18,28], count:5, type:'f-bloom', dur:[9,15]},
+  {make:()=>makeFlowerSVG('#fde8f2','#f5dd60'), size:[14,22], count:4, type:'f-bloom', dur:[7,12]},
+  // leaves
+  {make:()=>makeLeafSVG('#a8c89a'), size:[16,24], count:6, type:'f-bloom', dur:[9,16]},
+  {make:()=>makeLeafSVG('#8db882'), size:[12,20], count:5, type:'f-bloom', dur:[10,17]},
+  // stars
+  {make:()=>makeStarSVG('#a98be0'), size:[12,18], count:8, type:'f-spark', dur:[3,6]},
+  {make:()=>makeStarSVG('#e8a0c0'), size:[10,16], count:7, type:'f-spark', dur:[2.5,5]},
+  {make:()=>makeStarSVG('#f5cfe0'), size:[8,14],  count:6, type:'f-spark', dur:[3,5.5]},
+  // butterflies
+  {make:()=>makeButterflyHalf('#e0c8f8'), size:[32,44], count:3, type:'f-bloom', dur:[11,18]},
+  {make:()=>makeButterflyHalf('#fad0e5'), size:[28,40], count:3, type:'f-bloom', dur:[10,16]},
+];
+
+items.forEach(spec => {
+  for(let i=0; i<spec.count; i++){
+    const el = document.createElement('div');
+    el.className = 'floater ' + spec.type;
+    const sz = spec.size[0] + Math.random()*(spec.size[1]-spec.size[0]);
+    const dur = spec.dur[0] + Math.random()*(spec.dur[1]-spec.dur[0]);
+    const isRising = spec.type === 'f-spark' || spec.type === 'f-rose' || spec.type === 'f-heart';
+
+    if(isRising){
+      // scattered fixed positions that bob
+      el.style.left   = (Math.random()*96) + '%';
+      el.style.top    = (Math.random()*90) + '%';
+    } else {
+      // fall from top
+      el.style.left   = (Math.random()*100) + '%';
+      el.style.top    = (-sz - Math.random()*20) + 'px';
+    }
+
+    el.style.width            = sz + 'px';
+    el.style.height           = sz + 'px';
+    el.style.animationDuration= dur + 's';
+    el.style.animationDelay   = (-Math.random() * dur) + 's';
+    el.style.transform        = `rotate(${Math.random()*360}deg)`;
+
+    const blob = new Blob([spec.make()], {type:'image/svg+xml'});
+    const url  = URL.createObjectURL(blob);
+    const img  = document.createElement('img');
+    img.src    = url;
+    img.style.cssText = 'width:100%;height:100%;display:block;filter:drop-shadow(0 1px 3px rgba(124,92,191,.15))';
+    el.appendChild(img);
+    layer.appendChild(el);
+  }
+});
+
+/* ── SCREEN NAV ── */
+function goToCode(){
+  document.getElementById('landing').classList.add('hidden');
+  setTimeout(()=>document.getElementById('code-screen').classList.remove('hidden'),180);
+}
+
+/* ── CODE ── */
+let entered='';
+function renderDots(){
+  for(let i=0;i<4;i++){
+    const b=document.getElementById('d'+i);
+    b.textContent=entered[i]?'\u2022':'';
+    b.classList.toggle('active',i<entered.length);
+  }
+}
+function addDigit(d){if(entered.length>=4)return;entered+=d;renderDots();if(entered.length===4)checkCode();}
+function deleteDigit(){entered=entered.slice(0,-1);renderDots();hideError();}
+function clearCode(){entered='';renderDots();hideError();}
+function hideError(){document.getElementById('code-error').classList.remove('show');}
+function checkCode(){
+  if(entered===CONFIG.code){
+    launchConfetti();
+    setTimeout(()=>{
+      document.getElementById('code-screen').classList.add('hidden');
+      const ms=document.getElementById('message-screen');
+      ms.classList.remove('hidden');
+      setTimeout(()=>{
+        ['msg-eyebrow','msg-title','photo-wrap','msg-card','countdown-wrap'].forEach(id=>document.getElementById(id).classList.add('reveal'));
+        const h=document.getElementById('msg-hearts');
+        h.classList.add('reveal','visible');
+      },100);
+      startCountdown();
+    },550);
+  } else {
+    const de=document.getElementById('code-dots');
+    de.classList.add('shake');
+    document.getElementById('code-error').classList.add('show');
+    setTimeout(()=>{de.classList.remove('shake');entered='';renderDots();},440);
+  }
+}
+
+/* ── PHOTO ── */
+function loadPhoto(input){
+  const file=input.files[0]; if(!file) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const img=document.getElementById('user-photo');
+    img.src=e.target.result;
+    img.style.display='block';
+    document.getElementById('photo-hint').style.opacity='0';
+  };
+  r.readAsDataURL(file);
+}
+
+
+function getNext(){
+  const now=new Date(); const pts=CONFIG.date.split('-');
+  let nxt=new Date(now.getFullYear(),parseInt(pts[1])-1,parseInt(pts[2]));
+  if(nxt-now<0) nxt=new Date(now.getFullYear()+1,parseInt(pts[1])-1,parseInt(pts[2]));
+  return nxt;
+}
+function pad(n){return String(n).padStart(2,'0');}
+function startCountdown(){
+  function tick(){
+    const diff=getNext()-new Date();
+    if(diff<=0){
+      document.getElementById('cd-units').style.display='none';
+      document.getElementById('cd-label').style.display='none';
+      document.getElementById('anniversary-today').style.display='block';
+      return;
+    }
+    document.getElementById('cd-d').textContent=pad(Math.floor(diff/86400000));
+    document.getElementById('cd-h').textContent=pad(Math.floor((diff%86400000)/3600000));
+    document.getElementById('cd-m').textContent=pad(Math.floor((diff%3600000)/60000));
+    document.getElementById('cd-s').textContent=pad(Math.floor((diff%60000)/1000));
+    setTimeout(tick,1000);
+  }
+  tick();
+}
+
+/* ── CONFETTI ── */
+function launchConfetti(){
+  const cols=['#e8a0c0','#a98be0','#f5cfe0','#7c5cbf','#f0b8d4','#c49be8'];
+  for(let i=0;i<90;i++){
+    const c=document.createElement('div'); c.className='confetti-piece';
+    const isHeart=Math.random()>.65;
+    c.style.cssText=`left:${15+Math.random()*70}%;top:${5+Math.random()*35}%;background:${isHeart?'none':cols[Math.floor(Math.random()*cols.length)]};color:${cols[Math.floor(Math.random()*cols.length)]};font-size:${isHeart?14+Math.random()*10:0}px;width:${isHeart?'auto':6+Math.random()*8+'px'};height:${isHeart?'auto':6+Math.random()*8+'px'};border-radius:${Math.random()>.5?'50%':'3px'};animation-delay:${Math.random()*.4}s;animation-duration:${1.3+Math.random()*.9}s;`;
+    if(isHeart) c.textContent='\u2665';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),2600);
+  }
+}
+
+renderDots();
+</script>
+</body>
+</html>
